@@ -1,0 +1,72 @@
+<apex:component controller="SIS_AcademicsTab">
+    <script>
+        function getCookie(cname) 
+        {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function sendEmail()
+        {
+            document.getElementById('loading').style.display = 'block';
+            var conId = getCookie('apex__con');
+            var email = document.getElementById('inputEmail').value;
+            console.log(email, conId);
+            SIS_AcademicsTab.sendUnofficialTranscript(email,'{!stu.First_Name__c}',conId,
+                function(result, event)
+                {
+                    document.getElementById('loading').style.display = 'none';
+                    alert(result);
+                }
+            );
+        }
+    </script>
+    <div id="loading" style="display:none;">
+        <img src="/img/loading32.gif" id="loading-image" alt="Loading..."/>
+    </div>
+    <div class="genral_contactInfo">
+        <h2>My Transcript</h2>
+        <div class="genralBox clearfix">
+            <h4>Unofficial Transcript Request</h4>
+            <h5>Request an unofficial PDF of your transcript here.</h5><br/>
+            <h5>Choose to view your unofficial transcript by clicking the button below.</h5>
+            <div class="rectangleButton" style="width:300px;" onclick="window.open('/SIS_UnofficialTranscriptPDF', target='_blank');">
+                <i class="fa fa-file-text-o leftIcon" aria-hidden="true" style="padding: 13px 5px 0px 14px;"></i>
+                <div class="buttonText" style="margin-left: 30px;padding: 12px;">Loading and opening your transcript</div>
+            </div>
+            <br/>
+            <h5>Or choose to send your unofficial transcript to the email address you enter in the box below. You will receive an email within 24 hours with an attached PDF of your unofficial transcript.</h5>
+            <div style="display:table-row">
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <div class="inputBox" style="display:table-cell">
+                                <input id="inputEmail" placeholder="email@email.com" class="inputText" style="width: 200px;"/>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <div class="smallButton" style="width:150px;display:table-cell" onclick="sendEmail();">
+                                <i class="fa fa-envelope-o leftIcon" aria-hidden="true" style="padding: 13px 5px 0px 14px;"></i>
+                                <div class="buttonText">Submit Request</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:component>

@@ -1,0 +1,28 @@
+<apex:page controller="SIS_Homepage" standardStylesheets="false" showheader="false" sidebar="false" docType="html-5.0" action="{!onLoadAction}">
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'main.css')}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <div class="container">
+        <div class="leftBar"> 
+            <c:SIS_SideMenu ></c:SIS_SideMenu> 
+        </div>
+        <section class="rightBar">
+            <div id="account" style="display:{!IF($CurrentPage.parameters.tab == 'account','block','none')}">
+               <c:SIS_MyAccountTab ></c:SIS_MyAccountTab>
+               <c:SIS_MyAccountTabHelperComponent />
+            </div>
+            <div id="academics" style="display:{!IF($CurrentPage.parameters.tab == 'academics','block','none')}">
+                <c:SIS_AcademicsTab ></c:SIS_AcademicsTab>
+            </div>
+            <div id="resources" style="display:{!IF($CurrentPage.parameters.tab == 'resources','block','none')}">
+                <c:SIS_ResourcesTab ></c:SIS_ResourcesTab>
+            </div>
+            
+            <div id="finances" style="display:{!IF($CurrentPage.parameters.tab == 'finances','block','none')}">finances</div>
+            <div id="life" style="display:{!IF($CurrentPage.parameters.tab == 'life','block','none')}">life</div>
+            <div id="career" style="display:{!IF($CurrentPage.parameters.tab == 'career','block','none')}">career</div>
+            <div id="support" style="display:{!IF($CurrentPage.parameters.tab == 'support','block','none')}">support</div>
+            
+        </section>
+   </div> 
+</apex:page>

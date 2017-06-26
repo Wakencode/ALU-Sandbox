@@ -1,0 +1,169 @@
+<apex:component >
+    <apex:includeScript value="{!URLFOR($Resource.SIS_StaticResources, 'jquery.min.js')}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'font-awesome.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'sideMenu.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'responsive.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SIS_StaticResources, 'sideMenu.js')}"/>
+    
+    <apex:includeScript value="{!URLFOR($Resource.SIS_StaticResources, 'jquery.powertip.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'jquery.powertip.min.css')}"/>
+    <script src="/soap/ajax/38.0/connection.js" type="text/javascript"></script>
+
+    <style>
+        @media screen and (min-width: 1024px)
+        {
+            #academicsSubMenu
+            {
+                top: -100px;
+            }
+            #resourcesSubMenu
+            {
+                top: -200px;
+            }
+            .subMenu
+            {
+                height: 400px;
+            }
+        }
+        @media screen and (max-width: 1023px)
+        {
+            .headerPart .responsiveMenu{display:block;}
+        }
+        @media screen and (min-width: 1024px)
+        {
+            .navigationContainer{width:100% !important;}
+        }
+    </style>
+    <div>
+        <div class="headerPart">
+            <a href="javascript:void(0);" onclick="showMobileMenu();" class="responsiveMenu" id="mobileMenuBars">
+                <i class="fa fa-bars fa-3x" aria-hidden="true" id="mobileMenuIcon" ></i>
+            </a>
+            <div class="logo">
+                <apex:image url="{!URLFOR($Resource.SIS_StaticResources, 'logo_150x71.png')}"/>
+            </div>
+            <div class="line"></div>
+        </div>
+        <div class="navigationContainer" id="navigation">
+        <ul class="navigation">
+            <li class="{!IF($Currentpage.parameters.tab == 'account','active','')}">
+                <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=account&p=1');" class=" myaccIco">
+                    <i class="fa fa-user fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">My Account</span>
+                    <i class="fa fa-chevron-up fa-1x chevron chevronUp" aria-hidden="true"></i>
+                    <i class="fa fa-chevron-down fa-1x chevron chevronDown" aria-hidden="true"></i>
+                </a>
+                    
+                <ul class="subMenu">
+                    <li class="{!IF($CurrentPage.parameters.p != '2' && $CurrentPage.parameters.p != '3' && $CurrentPage.parameters.p != '4' && $CurrentPage.parameters.p != '5','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=account&p=1');">My Information</a>
+                            <i class="fa fa-2x fa-exclamation-circle myi" aria-hidden="true"></i>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                    <li class="{!IF($Currentpage.parameters.p == '2','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=account&p=2');">Emergency Contact</a>
+                            <i class="fa fa-2x fa-exclamation-circle myi" aria-hidden="true"></i>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                    <li class="{!IF($Currentpage.parameters.p == '3','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=account&p=3');">Parent &amp; Guardian Information</a>
+                            <i class="fa fa-2x fa-exclamation-circle myi" aria-hidden="true"></i>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                    <li class="{!IF($Currentpage.parameters.p == '4','active','')}">
+                        <div>
+                            <a href="javascript:void(0);">Travel Documents</a>
+                            <i class="fa fa-2x fa-exclamation-circle myi" aria-hidden="true"></i>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                    <li class="{!IF($Currentpage.parameters.p == '5','active','')}">
+                        <div>
+                            <a href="javascript:void(0);">Medical Information</a>
+                            <i class="fa fa-2x fa-exclamation-circle myi" aria-hidden="true"></i>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="{!IF($Currentpage.parameters.tab == 'academics','active','')}">
+                <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=academics&p=1');" class="myaccIco {!IF($Currentpage.parameters.tab == 'academics','active','')}">
+                    <i class="fa fa-leanpub fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">Academics</span>
+                    <i class="fa fa-chevron-up fa-1x chevron chevronUp" aria-hidden="true"></i>
+                    <i class="fa fa-chevron-down fa-1x chevron chevronDown" aria-hidden="true"></i>
+                </a>
+                <ul class="subMenu" id="academicsSubMenu">
+                    <li class="{!IF($CurrentPage.parameters.p != '2','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=academics&p=1');">My Grades</a>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                    <li class="{!IF($Currentpage.parameters.p == '2','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=academics&p=2');">My Transcript</a>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="{!IF($Currentpage.parameters.tab == 'resources','active','')}">
+                <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=resources&p=1');" class="myaccIco {!IF($Currentpage.parameters.tab == 'resources','active','')}">
+                    <i class="fa fa-files-o fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">Resources</span>
+                    <i class="fa fa-chevron-up fa-1x chevron chevronUp" aria-hidden="true"></i>
+                    <i class="fa fa-chevron-down fa-1x chevron chevronDown" aria-hidden="true"></i>
+                </a>
+                <ul class="subMenu" id="resourcesSubMenu">
+                    <li class="{!IF($CurrentPage.parameters.p != '2','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=resources&p=1');">Policies</a>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                    <li class="{!IF($Currentpage.parameters.p == '2','active','')}">
+                        <div>
+                            <a href="javascript:void(0);" onclick="checkEditCookie('/SIS_Homepage?tab=resources&p=2');">Internship FAQs</a>
+                            <i class="fa fa-1x fa-chevron-circle-right subMenuArrowIcon" aria-hidden="true"></i>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <!--<li class="{!IF($Currentpage.parameters.tab == 'life','active','')}">
+                <a href="javascript:void(0);" class="myaccIco {!IF($Currentpage.parameters.tab == 'life','active','')}">
+                    <i class="fa fa-home fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">Student Life</span>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" class="myaccIco {!IF($Currentpage.parameters.tab == 'career','active','')}">
+                    <i class="fa fa-briefcase fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">Career</span>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" class="myaccIco {!IF($Currentpage.parameters.tab == 'finances','active','')}">
+                    <i class="fa fa-money fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">Finances</span>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" class="myaccIco {!IF($Currentpage.parameters.tab == 'support','active','')}">
+                    <i class="fa fa-question-circle fa-2x" aria-hidden="true"></i><br/>
+                    <span class="text">Support</span>
+                </a>
+            </li>-->
+        </ul>
+        <div class="line signOutLine"></div>
+        <a href="javascript:void(0);" class="signOut" id="signOut" onclick="signOut();">Sign Out</a>
+        </div>
+    </div>
+</apex:component>

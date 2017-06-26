@@ -1,0 +1,51 @@
+<apex:page controller="SIS_login" showHeader="false" sidebar="false" cache="false" standardStylesheets="false">
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'SIS_login.css')}"/>
+  <apex:form id="formid">
+      <table align="center" width="40%" style="margin-top:20px;margin-bottom:10px;background-color:#ffffff;">
+          <tr>
+              <td>
+                  <apex:image url="{!URLFOR($Resource.SIS_StaticResources, 'logo_150x71.png')}" style="float:left;"/>
+              </td>
+          </tr>
+          <tr><td><apex:pagemessages ></apex:pagemessages></td></tr>
+      </table>
+      
+      <table cellpadding="4" cellspacing="4" align="center" width="40%" frame="box" style="margin-top:10px;margin-bottom:40px;background-color:#ffffff;">
+        <tr><td colspan="2" align="center" class="loginHeader fontClass">SIS LOGIN</td></tr>
+        <tr>
+            <td align="center" style="font-weight:bold;" class="fontClass" width="40%">Username: </td>
+            <td align="left"><apex:inputtext value="{!username}" style="width:200px" styleclass="fontClass"/></td>
+        </tr>
+        <tr>
+            <td align="center" style="font-weight:bold;" class="fontClass" width="40%">Password: </td>
+            <td align="left"><apex:inputSecret value="{!password}" style="width:200px" styleclass="fontClass"/></td>
+        </tr>
+        <tr><td colspan="2" align="center">
+            <apex:commandbutton value=" LOGIN " action="{!savelogin}" styleclass="buttonStyle" style=""/>
+        </td></tr>
+         <tr><td align="right" colspan="2" class="fontClass">
+             <apex:commandLink action="{!forgotPassword}" reRender="formid" style="text-decoration:none;">Forgot Password?</apex:commandlink>
+         </td></tr>
+      </table>
+      
+      <apex:outputPanel id="forgotPanel">
+          <apex:outputPanel rendered="{!forgotPanel}">
+              <table cellpadding="4" cellspacing="4" align="center" width="40%" frame="box" style="background-color:#ffffff;">
+                <tr><td colspan="2" align="center" class="loginHeader fontClass">Forgot Password</td></tr>
+                <tr><td><br/></td></tr>
+                <tr>
+                    <td align="center" style="font-weight:bold;" class="fontClass" width="40%">Enter Email ID: </td>
+                    <td align="left"><apex:inputfield value="{!student.Username__c}" style="width:200px" styleclass="fontClass"/></td>
+                </tr>
+                <tr><td><br/></td></tr>
+                <tr><td colspan="2" align="center">
+                    <apex:commandbutton value=" Receive Password " action="{!receivePassword}" rerender="formid" styleclass="buttonStyle" style="width:150px"/>
+                </td></tr>
+                <tr><td align="right" colspan="2" class="fontClass">
+                     <apex:commandLink value="Close" action="{!closeForgotPwd}" rerender="formid" styleclass="fontClass" style="text-decoration:none;"/>
+                 </td></tr>
+              </table>
+          </apex:outputPanel>
+      </apex:outputPanel>
+  </apex:form>
+</apex:page>

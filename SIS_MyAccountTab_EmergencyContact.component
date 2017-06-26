@@ -1,0 +1,11 @@
+<apex:component controller="SIS_MyAccountTab" allowDML="true">
+    <div class="contactInfo">
+        <div class="info">
+            <h4>In the case of an emergency, ALU staff may need to contact someone on your behalf. If you are involved in an accident, if you are having disciplinary proceedings, or if you are suffering from something life-threatening, whether physical or mental danger, an emergency contact would be notified as necessary. This person does not need to be a parent or guardian.</h4>
+        </div>
+    </div>
+    <div class="genral_contactInfo">
+        <h2>Emergency Contact Information</h2>
+        <c:SIS_OtherContactsComponent type="Emergency Contact"/>
+    </div>
+</apex:component>

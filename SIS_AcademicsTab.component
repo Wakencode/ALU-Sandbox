@@ -1,0 +1,57 @@
+<apex:component controller="SIS_AcademicsTab" allowDML="true">
+    <apex:includeScript value="{!URLFOR($Resource.SIS_StaticResources, 'myAccountTab.js')}"/>
+    <h2 style="text-transform:uppercase;">Academics</h2>
+    <h6></h6>
+    <div class="innerContainer">
+        <div class="inner_rightBar">
+            <div id="loading" style="display:none;">
+                <img src="/img/loading32.gif" id="loading-image" alt="Loading..."/>
+            </div>
+            <div class="profile clearfix">
+                <h3>Hello, {!stu.First_name__c} {!stu.Last_name__c}</h3>
+                <div class="userImg">
+                    <i class="fa fa-2x fa-pencil picEdit pencilIconEast" aria-hidden="true" onclick="document.getElementById('profilePicUpload').click();"/>
+                    
+                    <input type="file" style="display:none" id="profilePicUpload" onchange="document.getElementById('loading').style.display = 'block';profilePicUploaded();"/>
+                    <img src="{!userImage}" style="display:{!IF(userImage != '','block','none')}"/>
+                    <img src="{!URLFOR($Resource.SIS_DefaultProfilePic)}" style="display:{!IF(userImage == '','block','none')}"/>
+                </div>
+                <div class="contactInfo">
+                    <div class="info">
+                        <ul class="info_list">
+                            <li>
+                                <label>Campus</label>
+                                <span class="value">{!stu.Campus_Preference__r.Name}</span>
+                            </li>
+                            <li>
+                                <label>Entering Year</label>
+                                <span class="value">
+                                    <apex:outputText value="{0, date, MMMM d',' yyyy}">
+                                        <apex:param value="{!stu.Birthdate__c}"/>
+                                    </apex:outputText>
+                                </span>
+                            </li>
+                            <li>
+                                <label>Expected graduation year</label>
+                                <span class="value">{!stu.Nationality__c}</span>
+                            </li>
+                            <li>
+                                <label>Major</label>
+                                <span class="value">{!stu.Nationality__c}</span>
+                            </li>
+                        </ul>
+                        <p class="infoDesc">
+                            To change the above information, please go to registrar and file the appropriate form.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="grades" style="display:{!IF($CurrentPage.parameters.p != '2', 'block', 'none')}">
+                <c:SIS_AcademicsTab_MyGrades />
+            </div>
+            <div id="transcript" style="display:{!IF($CurrentPage.parameters.p == '2', 'block', 'none')}">
+                <c:SIS_AcademicsTab_MyTranscript />
+            </div>
+        </div>
+    </div>
+</apex:component>

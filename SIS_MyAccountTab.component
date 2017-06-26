@@ -1,0 +1,19 @@
+<apex:component controller="SIS_MyAccountTab" allowDML="true">
+    <apex:includeScript value="{!URLFOR($Resource.SIS_StaticResources, 'myAccountTab.js')}"/>
+    
+    <h2 style="text-transform:uppercase;">My Account</h2>
+    <h6>Description of what to find here.</h6>
+    <div class="innerContainer">
+        <div class="inner_rightBar">
+            <div id="myInfo" style="display:{!IF($CurrentPage.parameters.p != '2' && $CurrentPage.parameters.p != '3' && $CurrentPage.parameters.p != '4' && $CurrentPage.parameters.p != '5','block','none')}">
+                <c:SIS_MyAccountTab_MyInformation />
+            </div>
+            <div id="emergencyContact" style="display:{!IF($CurrentPage.parameters.p == '2', 'block', 'none')}">
+                <c:SIS_MyAccountTab_EmergencyContact />
+            </div>
+            <div id="parentGuardian" style="display:{!IF($CurrentPage.parameters.p == '3', 'block', 'none')}">
+                <c:SIS_MyAccountTab_ParentGuardian />
+            </div>
+        </div>
+    </div>
+ </apex:component>

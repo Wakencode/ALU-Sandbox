@@ -1,0 +1,172 @@
+<apex:page controller="SIS_FileUpload" standardStylesheets="false" showheader="false" sidebar="false" docType="html-5.0" id="pageId">
+    <apex:stylesheet value="{!URLFOR($Resource.SIS_StaticResources, 'main.css')}"/>
+    <script src="/soap/ajax/32.0/connection.js" type="text/javascript"></script> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .outerDiv
+        {
+            width: 590px;
+            height: 300px;
+            border-radius: 1px;
+            background-color: #d2d0ce;
+            margin: 50px 50px;
+            padding: 20px 20px;
+        }
+        .btn
+        {
+            width: 240px;
+            height: 35px;
+            border-radius: 100px;
+            background-color: #686868;
+            display: inline-flex;
+            padding: 2px 0 0 7px;
+        }
+        .uploadedFile
+        {
+            padding: 10px 10px;
+            border: 1px solid #686868;
+            border-radius: 100px;
+            color: #686868;
+        }
+        #removeFileBubble
+        {
+            border: 1px solid #686868;
+            border-radius: 15px;
+            padding: 7px;
+            color: #686868;
+            background:#fff;
+        }
+    </style>
+    <script>
+        function getCookie(cookieName)
+        {
+            var coo = document.cookie;
+            var apexCookies = [];
+            var cookieValue = '';
+            coo.split(';').forEach(function(c)
+            {
+                if(c.startsWith(' apex__'))
+                {
+                    apexCookies.push(c);
+                }
+            });
+            if(apexCookies.length > 0)
+            {
+                apexCookies.forEach(function(ac)
+                {
+                    if(ac.startsWith(' apex__'+cookieName+'='))
+                    {
+                        cookieValue = ac.split('=')[1];
+                    }
+                });
+            }
+            if(cookieValue != '')
+            {
+                return cookieValue;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        window.onload = function()
+        {
+            var file = document.getElementById('uploadedFile');
+
+            file.onchange = function()
+            {
+                sforce.connection.sessionId = "{!$Api.Session_ID}";
+                var files = file.files;
+                var stuId = getCookie('con');
+                var reader = new FileReader();
+                reader.file = files[0];
+                reader.onload = function(e)
+                {
+                    var att = new sforce.SObject("Attachment");
+                    att.Name = this.file.name;
+                    att.ContentType = this.file.type;
+
+                    var binary = "";
+                    var bytes = new Uint8Array(e.target.result);
+                    var length = bytes.byteLength;
+
+                    for (var i = 0; i < length; i++)
+                    {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    att.Body = (new sforce.Base64Binary(binary)).toString();
+                    Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.SIS_FileUpload.fileUpload}',
+                    att.Name, att.Body, att.ContentType, stuId, 'Medical',
+                    function(result, event)
+                    {
+                        console.log('RESULT-------',result);
+                        alert(result);
+                        window.location.reload();
+                    });
+                };
+                reader.readAsArrayBuffer(files[0]);
+            };
+            
+            var removeIcon = document.getElementById('removeFileIcon');
+            removeIcon.onmouseover = function()
+            {
+                document.getElementById('removeFileBubble').style.display = 'inline';
+            };
+            removeIcon.onmouseout = function()
+            {
+                document.getElementById('removeFileBubble').style.display = 'none';
+            };
+        };
+        
+        function removeFile(fileId)
+        {
+            var conf = confirm('Are you sure?');
+            if(conf)
+            {
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.SIS_FileUpload.removeFile}',
+                    fileId,
+                    function(result, event)
+                    {
+                        console.log('RESULT-------',result);
+                        alert(result);
+                        window.location.reload();
+                    });
+            }
+        }
+    </script>
+    <div class="container">
+        <div class="leftBar">
+            <c:SIS_SideMenu ></c:SIS_SideMenu> 
+        </div>
+        <section class="rightBar" style="height:1000px;">
+            <div class="outerDiv">
+                <h3>Medical Consent Form for Minors</h3>
+                <h6 style="color: #686868;">
+                    In the case of an emergency where staff cannot reach your parents or guardians in time, 
+                    the director of Student Life at ALU needs permission to make medical decisions on behalf of the student.<br/><br/>
+                    Download the medical consent form.
+                    <a href="{!URLFOR($Resource.SIS_ConsentForm)}" target="_blank">
+                        <div class="btn" style="width: 200px;">
+                            <i class="fa fa-arrow-down fa-1x" aria-hidden="true" style="padding: 9px 5px;color:#ffffff;"></i>
+                            <h6 style="color:#ffffff;margin-left: 10px;">Download the form</h6>
+                        </div>
+                    </a>
+                    <br/><br/>
+                    Please have a parent or guardian sign the medical consent permission form and upload the signed form.
+                </h6>
+                <input type="file" id="uploadedFile" style="display:none;"/>
+                <a href="javascript:void(0);" onclick="document.getElementById('uploadedFile').click();" style="display:{!IF(file == null, 'block','none')}">
+                    <div class="btn">
+                        <i class="fa fa-plus-circle fa-2x" aria-hidden="true" style="padding:2px 0;color:#ffffff;"></i>
+                        <h6 style="color:#ffffff;margin-left: 10px;">Upload the signed form</h6>
+                    </div>
+                </a>
+                <div style="display:{!IF(file != null, 'inline-flex','none')}" class="uploadedFile">
+                    <a href="{!file.File_Link__c}" target="_blank" style="color: #686868;">{!file.Name}</a>
+                    <i id="removeFileIcon" class="fa fa-times-circle fa-2x" aria-hidden="true" style="margin-left: 20px;color: #686868;cursor:pointer" onclick="removeFile('{!file.Id}');"></i>
+                </div>
+                <div id="removeFileBubble" style="display: none">Remove file</div>
+            </div>
+        </section>
+    </div>
+</apex:page>

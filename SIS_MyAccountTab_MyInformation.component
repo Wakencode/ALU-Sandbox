@@ -1,0 +1,172 @@
+<apex:component controller="SIS_MyAccountTab" allowDML="true">
+    <div id="loading" style="display:none;">
+        <img src="/img/loading32.gif" id="loading-image" alt="Loading..."/>
+    </div>
+    <div class="profile clearfix">
+        <h3>Hello, {!stu.First_name__c} {!stu.Last_name__c}</h3>
+        <div class="userImg">
+            <i class="fa fa-2x fa-pencil picEdit pencilIconEast" aria-hidden="true" onclick="document.getElementById('profilePicUpload').click();"/>
+            
+            <input type="file" style="display:none" id="profilePicUpload" onchange="document.getElementById('loading').style.display = 'block';profilePicUploaded();"/>
+            <img src="{!userImage}" style="display:{!IF(userImage != '','block','none')}"/>
+            <img src="{!URLFOR($Resource.SIS_DefaultProfilePic)}" style="display:{!IF(userImage == '','block','none')}"/>
+        </div>
+        <div class="contactInfo">
+            <div class="info">
+                <ul class="info_list">
+                    <li>
+                        <label>ALU Email</label>
+                        <span class="value">{!stu.ALUEmail__c}</span>
+                    </li>
+                    <li>
+                        <label>Student ID</label>
+                        <span class="value">0000</span>
+                    </li>
+                    <li>
+                        <label>Birthday</label>
+                        <span class="value">
+                            <apex:outputText value="{0, date, MMMM d',' yyyy}">
+                                <apex:param value="{!stu.Birthdate__c}"/>
+                            </apex:outputText>
+                        </span>
+                    </li>
+                    <li>
+                        <label>Nationality</label>
+                        <span class="value">{!stu.Nationality__c}</span>
+                    </li>
+                </ul>
+                <p class="infoDesc">
+                    To change the above information, please go to registrar and file the appropriate form.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="genral_contactInfo">
+        <h2>General Contact Information</h2>
+        <div id="AccountViewMode">
+            <div class="genralBox clearfix">
+                <i class="fa fa-2x fa-pencil formIcons pencilIconWest" aria-hidden="true" onclick="editForm();"/>
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <h4>Personal Email</h4>
+                            <span class="value">{!stu.Email__c}</span>
+                        </li>
+                        <li>
+                            <h4>Phone Number</h4>
+                            <span class="value">{!stu.Phone__c}</span>
+                        </li>
+                        <li>
+                            <h4>Home Address</h4>
+                            <span class="value">
+                                {!stu.MailingStreet__c}<br/>
+                                {!stu.MailingCity__c}<br/>
+                                {!stu.MailingState__c}<br/>
+                                {!stu.MailingCountry__c}<br/>
+                                {!stu.MailingPostalCode__c}
+                            </span>
+                        </li>
+                    </ul>
+                    <br/><br/><br/>
+                </div>
+            </div>
+        </div>
+
+        <div id="AccountEditMode">
+            <apex:form id="formId">
+                <!--<apex:actionFunction name="saveMyInfo" action="{!save}" status="status" oncomplete="afterLeavingMyAccountMyInfo();"/>-->
+            <div class="genralBox clearfix">
+                <h3>Editing my contact information</h3>
+                
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <label class="label">Personal Email</label>
+                            <div class="inputBox">
+                                <input id="myInfoEmail" value="{!stu.Email__c}" class="inputText" />
+                            </div>
+                        </li>
+                        <li>
+                            <label class="label">Phone Number</label>
+                            <div class="inputBox">
+                                <input id="myInfoPhone" value="{!stu.Phone__c}" class="inputText" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <label class="label">Street Address</label>
+                            <div class="inputBox">
+                                <input id="myInfoStreet" value="{!stu.MailingStreet__c}" class="inputText" style="width:100%;"/>
+                            </div>
+                        </li>
+                        <li>
+                            <label class="label">City</label>
+                            <div class="inputBox">
+                                <input id="myInfoCity" value="{!stu.MailingCity__c}" class="inputText" />
+                            </div>
+                        </li>
+                        <li>
+                            <label class="label">Province or State</label>
+                            <div class="inputBox">
+                                <input id="myInfoState" value="{!stu.MailingState__c}" class="inputText" />
+                            </div>
+                        </li>
+                        <li>
+                            <label class="label">Zipcode</label>
+                            <div class="inputBox">
+                                <input id="myInfoZipCode" value="{!stu.MailingPostalCode__c}" class="inputText" />
+                            </div>
+                        </li>
+                        <li>
+                            <label class="label">Country</label>
+                            <div class="inputBox">
+                                <input id="myInfoCountry" value="{!stu.MailingCountry__c}" class="inputText" />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="smallButtonContainer">
+                    <div id="saveOtherContactButton{!DomId}" class="smallButton" onclick="saveForm();">
+                        <i class="fa fa-2x fa-check leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Save</div>
+                    </div>
+                    <div id="cancelOtherContactButton{!DomId}" class="smallButton" onclick="cancelForm();">
+                        <i class="fa fa-2x fa-times leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Cancel</div>
+                    </div>
+                </div>
+           </div> 
+            
+           
+           <div class="modal" id="confirmDialogBox">
+               <div class="confirmDialogBox">
+                    <label class="label">Are you sure you want to save and update this information?</label>
+                    <apex:commandLink styleclass="whiteIcons" onclick="saveMyInfo();return false;" status="status">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </apex:commandLink>
+                    <apex:commandLink onclick="cancelForm();return false;" styleclass="whiteIcons" rerender="formId">
+                        <i class="fa fa-times-circle" aria-hidden="true"></i>
+                    </apex:commandLink>
+               </div>
+           </div>
+           
+           <div class="modal" id="leavingMyAccountMyInfoPage">
+               <div class="confirmDialogBox">
+                    <label class="label">You are leaving the page. Would you like to save any changes you have made?</label>
+                    <div class="smallButton borderSmallButton" onclick="saveMyInfo();">
+                        <i class="fa fa-2x fa-check leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Save</div>
+                    </div>
+                    <div class="smallButton borderSmallButton" onclick="cancelForm();">
+                        <i class="fa fa-2x fa-times leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Cancel</div>
+                    </div>
+               </div>
+           </div>
+           </apex:form>
+        </div>
+    </div>
+</apex:component>

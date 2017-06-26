@@ -1,0 +1,171 @@
+<apex:component controller="SIS_OtherContactsComponent" allowDML="true">
+    <apex:attribute name="type" type="string" description="recordType" assignTo="{!recordType}" required="true"/>
+    
+    <!---- VIEW MODE --->
+    <div id="ocTable{!DomId}" style="display:{!IF(OcList != null && OcList.size > 0, 'block', 'none')}">
+        <apex:repeat value="{!OcList}" var="oc">
+            <div class="genralBox clearfix">
+                <i class="fa fa-2x fa-trash formIcons deleteIconWest" aria-hidden="true" onclick="deleteOtherContact('{!oc.Id}');"/>
+                <i class="fa fa-2x fa-pencil formIcons pencilIconWest" aria-hidden="true" onclick="editOtherContact('{!recordType}','{!oc.Id}');"/>
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <h4>Name</h4>
+                            <span class="value">{!oc.Name}</span>
+                        </li>
+                        <li>
+                            <h4>Email Address</h4>
+                            <span class="value">{!oc.Email_Address__c}</span>
+                        </li>
+                        <li>
+                            <h4>Phone Number</h4>
+                            <span class="value">{!oc.Phone_Number__c}</span>
+                        </li>
+                        <li>
+                            <h4>Alternate Phone Number</h4>
+                            <span class="value">{!oc.Alternate_Phone_Number__c}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="halfForm">
+                    <ul class="form_box">
+                        <li>
+                            <h4>Relation to me</h4>
+                            <span class="value">{!oc.Relation_to_me__c}</span>
+                        </li>
+                        <li>
+                            <h4>Home Address</h4>
+                            <span class="value">
+                                {!oc.Street_Address__c}<br/>
+                                {!oc.City__c}<br/>
+                                {!oc.Province_or_State__c}<br/>
+                                {!oc.Country__c}<br/>
+                                {!oc.Zip_Code__c}
+                            </span>
+                        </li>
+                    </ul>
+                    <br/><br/><br/>
+                </div>
+            </div>
+        </apex:repeat>
+    </div>
+    
+    <!---- CREATE BUTTON ------>
+    <div id="createButton{!DomId}" class="rectangleButton" style="display:{!IF(OcList.size < 2,'block','none')}" onclick="createNewOtherContact('{!recordType}');">
+        <i class="fa fa-2x fa-plus-circle leftIcon" aria-hidden="true"/>
+        <div class="buttonText">
+            Add {!buttonText}
+        </div>
+    </div>
+    
+    <!--- CREATE/EDIT MODE ------>
+    <div id="createNewContact{!DomId}" style="display:none;">
+        <div class="genralBox clearfix">
+            <h3>{!formTitle}</h3>
+            <div class="halfForm">
+                <ul class="form_box">
+                    <li>
+                        <label class="label">Name</label>
+                        <div class="inputBox">
+                            <input id="inputName{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Relation to me</label>
+                        <div class="inputBox">
+                            <input id="inputRelation{!DomId}" class="inputText"/>
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Email Address</label>
+                        <div class="inputBox">
+                            <input id="inputEmail{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Phone Number</label>
+                        <div class="inputBox">
+                            <input id="inputPhone{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Alternate Phone Number</label>
+                        <div class="inputBox">
+                            <input id="inputAltPhone{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="halfForm">
+                <ul class="form_box">
+                    <li>
+                        <label class="label">Street Address</label>
+                        <div class="inputBox">
+                            <input id="inputStreetAddress{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">City</label>
+                        <div class="inputBox">
+                            <input id="inputCity{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Province or State</label>
+                        <div class="inputBox">
+                            <input id="inputState{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Zip Code</label>
+                        <div class="inputBox">
+                            <input id="inputZipCode{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                    <li>
+                        <label class="label">Country</label>
+                        <div class="inputBox">
+                            <input id="inputCountry{!DomId}" class="inputText" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="smallButtonContainer">
+                <div id="saveOtherContactButton{!DomId}" class="smallButton" onclick="showSaveDialog('{!recordType}');">
+                    <i class="fa fa-2x fa-check leftIcon" aria-hidden="true"/>
+                    <div class="buttonText">Save</div>
+                </div>
+                <div id="cancelOtherContactButton{!DomId}" class="smallButton" onclick="cancelOtherContact('{!recordType}','{!OcList.size}');">
+                    <i class="fa fa-2x fa-times leftIcon" aria-hidden="true"/>
+                    <div class="buttonText">Cancel</div>
+                </div>
+            </div>
+            <div class="modal" id="confirmDialogBox{!DomId}">
+               <div class="confirmDialogBox">
+                    <label class="label">Are you sure you want to save and update this information?</label>
+                    <div class="smallButton borderSmallButton" onclick="saveOtherContact('{!recordType}');">
+                        <i class="fa fa-2x fa-check leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Save</div>
+                    </div>
+                    <div class="smallButton borderSmallButton" onclick="cancelOtherContact('{!recordType}','{!OcList.size}');">
+                        <i class="fa fa-2x fa-times leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Cancel</div>
+                    </div>
+               </div>
+           </div>
+           <div class="modal" id="leavingEmergencyParentPage{!DomId}">
+               <div class="confirmDialogBox">
+                    <label class="label">You are leaving the page. Would you like to save any changes you have made?</label>
+                    <div class="smallButton borderSmallButton" onclick="saveOtherContact('{!recordType}');">
+                        <i class="fa fa-2x fa-check leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Save</div>
+                    </div>
+                    <div class="smallButton borderSmallButton" onclick="cancelOtherContact('{!recordType}','{!OcList.size}');">
+                        <i class="fa fa-2x fa-times leftIcon" aria-hidden="true"/>
+                        <div class="buttonText">Cancel</div>
+                    </div>
+               </div>
+           </div>
+       </div>
+    </div>
+</apex:component>

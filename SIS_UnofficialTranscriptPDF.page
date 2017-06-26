@@ -1,0 +1,122 @@
+<apex:page sidebar="false" showChat="false" showHeader="false" applyBodyTag="false" controller="SIS_AcademicsTab" renderAs="pdf">
+    <head>
+        <style type="text/css" media="print">
+            @page 
+            {
+                margin:140px 40px 50px 40px;
+                
+                @top-center 
+                {
+                    content: element(header);
+                }
+                @bottom-center 
+                {
+                    content: element(footer);
+                }
+            }
+            div.header 
+            {
+                padding: 10px;
+                position: running(header);
+            }
+            div.headerContent
+            {
+                font-weight:bold;
+                font-family: 'Montserrat';
+                font-size:14px;
+            }
+            div.footer 
+            {
+                display: block;
+                padding: 5px;
+                font-family: 'Calibri,Candara,Segoe,Segoe UI,Optima',Arial,sans-serif;
+                font-size:8px;
+                position: running(footer);
+            }
+            .pagenumber:before 
+            {
+                content: counter(page);
+            }
+            .pagecount:before 
+            {
+                content: counter(pages);
+            }
+        </style>
+    </head>
+    
+    <div class="header" align="center">
+        <table>
+            <tr>
+                <td width="20%"><img src="{!URLFOR($Resource.SIS_StaticResources, 'UnofficialTranscriptPDFLogo.png')}"/></td>
+                <td><div class="headerContent">UNOFFICIAL TRANSCRIPT</div></td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="footer" align="center">
+        <!--<div>Page <span class="pagenumber"/> of <span class="pagecount"/></div>-->
+        This is an unofficial Transcript issued by the African Leadership College.
+    </div>
+    
+    <div class="content">
+        <h4>STUDENT NAME:</h4>
+        <p id="stuName">{!stu.Full_Name__c}</p>
+        
+        <apex:repeat value="{!Grades}" var="prog">
+            <apex:outputPanel rendered="{!IF(programIdNameMap[prog] == 'Leadership Core',true,false)}">
+                <h4>LEADERSHIP CORE PERFORMANCE</h4>
+                <apex:variable value="{!0}" var="total"/>
+                <table style="width: 90%;margin-left: 30px;" cellpadding="4" cellspacing="4">
+                    <tr style="font-weight:bold;"><td>COURSE</td><td>COURSE TITLE</td><td>GRADE (4.0)</td></tr>
+                    <apex:repeat value="{!Grades[prog]}" var="course">
+                        <tr>
+                            <td>{!course.hed__Course_Offering__r.hed__Course__r.hed__Course_ID__c}</td>
+                            <td>{!course.hed__Course_Offering__r.hed__Course__r.Name}</td>
+                            <td>{!course.hed__Grade__c}</td>
+                        </tr>
+                        <apex:variable value="{!total + course.hed__Grade__c}" var="total"/>
+                    </apex:repeat>
+                    <tr style="font-weight:bold;"><td></td><td>OVERALL PERFORMANCE</td><td>{!total}</td></tr>
+                </table>
+                <br/>
+            </apex:outputPanel>
+        </apex:repeat>
+        
+        <h4>Grading Explanation</h4>
+        <p style="text-align:justify">
+            The ALC Leadership Core is broken down into 7 meta skills that students develop mastery in over their first year of study before moving 
+            onto their Degree Program in their second year. These 7 skills (Leading Self, Leading Others, Critical Thinking, Entrepreneurial Thinking, 
+            Quantitative Reasoning, Managing Complex Tasks, Communicating for Impact) are covered in the 4 courses listed above. These skills are broken 
+            down into measurable learning outcomes and graded on a 5-point scale.
+        </p>
+        <br/>
+        
+        <apex:repeat value="{!Grades}" var="prog">
+            <apex:outputPanel rendered="{!IF(programIdNameMap[prog] != 'Leadership Core',true,false)}">
+                <h4>{!programIdNameMap[prog]} Performance</h4>
+                <apex:variable value="{!0}" var="total"/>
+                <table style="width: 90%;margin-left: 30px;" cellpadding="4" cellspacing="4">
+                    <tr style="font-weight:bold;"><td>COURSE</td><td>COURSE TITLE</td><td>GRADE (100)</td></tr>
+                    <apex:repeat value="{!Grades[prog]}" var="course">
+                        <tr>
+                            <td>{!course.hed__Course_Offering__r.hed__Course__r.hed__Course_ID__c}</td>
+                            <td>{!course.hed__Course_Offering__r.hed__Course__r.Name}</td>
+                            <td>{!course.hed__Grade__c}</td>
+                        </tr>
+                        <apex:variable value="{!total + course.hed__Grade__c}" var="total"/>
+                    </apex:repeat>
+                    <tr style="font-weight:bold;"><td></td><td>OVERALL PERFORMANCE</td><td>{!total}</td></tr>
+                </table>
+                <br/>
+            </apex:outputPanel>
+        </apex:repeat>
+        
+        <br/>
+        <p>
+            This transcript reflects the student’s performance as at
+            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                <apex:param value="{!TODAY()}"/>
+            </apex:outputText>
+        </p>
+    </div>
+</apex:page>

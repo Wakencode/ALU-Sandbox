@@ -1,0 +1,19 @@
+<apex:component controller="SIS_AcademicsTab" allowDML="true">
+    <div class="genral_contactInfo">
+        <h2>My Grades</h2>
+        <div class="genralBox clearfix">
+            <apex:repeat value="{!Grades}" var="prog">
+                <h4>{!programIdNameMap[prog]}</h4>
+                <table style="width: 90%;margin-left: 20px;">
+                    <apex:repeat value="{!Grades[prog]}" var="course">
+                        <tr>
+                            <td><h5>{!course.hed__Course_Offering__r.hed__Course__r.Name}</h5></td>
+                            <td align="right"><h5>{!course.hed__Grade__c}</h5></td>
+                        </tr>
+                    </apex:repeat>
+                </table>
+                <br/>
+            </apex:repeat>
+        </div>
+    </div>
+</apex:component>
